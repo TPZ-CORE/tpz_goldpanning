@@ -16,9 +16,14 @@ TPZInv = exports.tpz_inventory:getInventoryAPI() -- Getting the inventory API Fu
 TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
 	local _source = data.source
 
+	if data.durability <= 0 then
+	    SendNotification(_source, Locales['NO_DURABILITY'], "error")
+	    return
+	end
+		
 	TriggerClientEvent('tpz_goldpanning:startPanning', _source)
-
 	TPZInv.removeItemDurability(_source, Config.GoldPanItem, Config.DurabilityRemove, data.itemId, false)
+		
 	--TPZInv.closeInventory(_source)  -- This is not required since we have already set it as closeInventory = true  from database `tpz_items` table.
 end)
 
