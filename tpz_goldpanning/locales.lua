@@ -8,5 +8,5 @@ Locales = {
   ['NOT_ALLOWED_AREA']             = "~e~You cannot pan for gold fragments in this area.",
 
   ['NOT_ENOUGH_INVENTORY_WEIGHT'] = "~e~You do not have enough weight to carry any Gold Fragments.",
-  ['GOLDPAN_BROKE']               = "~e~The Gold Pan you have been using, unfortunately it has been destroyed.",
+  ['NO_DURABILITY']               = "~e~The Gold Pan you have been using, unfortunately seems to be useless.",
 }
