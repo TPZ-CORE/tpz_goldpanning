@@ -1,7 +1,7 @@
 Config = {}
 
 Config.GoldPanItem  = "goldpan"
-
+ 
 Config.Reward       = { 
     item = "goldfragment", 
     randomQuantity = { min = 1, max = 1 },
