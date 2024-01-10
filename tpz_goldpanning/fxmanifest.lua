@@ -13,3 +13,5 @@ shared_scripts {
 
 server_scripts { 'server/*.lua' }
 client_scripts { 'client/*.lua' }
+
+lua54 'yes'
