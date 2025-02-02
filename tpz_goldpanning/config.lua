@@ -7,7 +7,7 @@ Config.GoldPanItem = "goldpan"
 Config.Reward = { Item = "goldfragment", ReceiveValue = { min = 1, max = 1 } }
 
 -- You want to remove durability on every use?
-Config.Durability = { Enabled = true, RemoveValue = { min = 1, max = 1 } } -- / 100
+Config.Durability = { Enabled = true, RemoveValue = { min = 1, max = 3 } } -- / 100
 
 -- Difficulty Stages when performing the skillcheck. 
 -- You can create as many stages you want.
