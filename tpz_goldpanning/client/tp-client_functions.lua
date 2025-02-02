@@ -29,10 +29,8 @@ PlayCrouchAnimationAndAttachPanObject = function()
     SetEntityVisible(CURRENT_OBJECT_ENTITY, true)
     SetEntityAlpha(CURRENT_OBJECT_ENTITY, 255, false)
     Citizen.InvokeNative(0x283978A15512B2FE, CURRENT_OBJECT_ENTITY, true)
-    
-    SetModelAsNoLongerNeeded(joaat("P_CS_MININGPAN01X"))
 
-    AttachEntityToEntity(CURRENT_OBJECT_ENTIT,ped,boneIndex, 0.2, 0.0, -0.2, -100.0, -50.0, 0.0, false, false, false, true, 2, true)
+    AttachEntityToEntity(CURRENT_OBJECT_ENTITY,ped,boneIndex, 0.2, 0.0, -0.2, -100.0, -50.0, 0.0, false, false, false, true, 2, true)
     TaskPlayAnim(ped, dict, "inspectfloor_player", 1.0, 8.0, -1, 1, 0, false, false, false)
 end
 
