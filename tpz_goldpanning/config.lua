@@ -10,11 +10,12 @@ Config.Reward = { Item = "goldfragment", ReceiveValue = { min = 1, max = 1 } }
 Config.Durability = { Enabled = true, RemoveValue = 3 } -- / 100
 
 -- Difficulty Stages when performing the skillcheck. 
+-- You can create as many stages you want.
 Config.Difficulties = {
-    { mode = "easy" },
-    { mode = "normal" },
-    { mode = "normal" },
-    { mode = "hard" },
+    "easy",   -- stage 1
+    "normal", -- stage 2
+    "normal", -- stage 3
+    "hard",   -- stage 4
 }
 
 ---------------------------------------------------------------
