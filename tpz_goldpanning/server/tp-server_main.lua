@@ -79,7 +79,7 @@ end)
 RegisterServerEvent("tpz_goldpanning:server:onRandomReward")
 AddEventHandler("tpz_goldpanning:server:onRandomReward", function(waterHashId)
     local _source          = source 
-    local PlayerData       = GetPlayerData()
+    local PlayerData       = GetPlayerData(_source)
     
     local foundWaterSource = IsWaterSource(waterHashId)
 
