@@ -41,6 +41,7 @@ end)
 --[[ Events  ]]--
 -----------------------------------------------------------
 
+
 RegisterNetEvent('tpz_goldpanning:client:startPanning')
 AddEventHandler('tpz_goldpanning:client:startPanning', function()
 
@@ -91,16 +92,14 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
                 TriggerServerEvent("tpz_goldpanning:onRandomReward", currentWaterId)
             end
 
+            IS_PLAYER_BUSY = false
+            
+        else
+            SendNotification(nil, Locales['NOT_ALLOWED_AREA'], "error")
         end
 
     else
         SendNotification(nil, Locales['ALREADY_IN_PROGRESS'], "error")
-    end
-
-    IS_PLAYER_BUSY = false
-
-    if not foundWaterSource then
-        SendNotification(nil, Locales['NOT_ALLOWED_AREA'], "error")
     end
 
 end)
