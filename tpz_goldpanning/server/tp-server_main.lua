@@ -18,30 +18,46 @@ local ListedPlayers = {}
 TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
 	local _source = data.source
 
- if ListedPlayers[_source] then
-     SendNotification(_source, Locales['GOLDPAN_IN_PROGRESS'], "error")
-     return
- end
+     if ListedPlayers[_source] then
+         SendNotification(_source, Locales['GOLDPAN_IN_PROGRESS'], "error")
+         return
+     end
 
 	if data.durability <= 0 and Config.Durability.Enabled then
 	    SendNotification(_source, Locales['NO_DURABILITY'], "error")
 	    return
 	end
 
- ListedPlayers[_source] = true
+     ListedPlayers[_source] = true
 		
 	TriggerClientEvent('tpz_goldpanning:client:startPanning', _source)
 	
- if Config.Durability.Enabled then
-     TPZInv.removeItemDurability(_source, Config.GoldPanItem, Config.Durability.RemoveValue, data.itemId, false)
- end
+     if Config.Durability.Enabled then
+         TPZInv.removeItemDurability(_source, Config.GoldPanItem, Config.Durability.RemoveValue, data.itemId, false)
+     end
 
 	--TPZInv.closeInventory(_source)  -- This is not required since we have already set it as closeInventory = true  from database `tpz_items` table.
 end)
+
+-----------------------------------------------------------
+--[[ Base Events  ]]--
+-----------------------------------------------------------
  
+AddEventHandler('onResourceStop', function(resourceName)
+  if (GetCurrentResourceName() ~= resourceName) then
+    return
+  end
+  
+  ListedPlayers = nil -- clearing all data
+end)
+
+AddEventHandler('playerDropped', function (reason, resourceName, clientDropReason)
+     ListedPlayers[source] = nil -- removing player source in case he is listed (crashed?)
+end)
+
 -----------------------------------------------------------
 --[[ Events  ]]--
------------------------------------------------------------
+-------------------------------------------------------------
 
 RegisterServerEvent("tpz_goldpanning:server:onRandomReward")
 AddEventHandler("tpz_goldpanning:server:onRandomReward", function()
