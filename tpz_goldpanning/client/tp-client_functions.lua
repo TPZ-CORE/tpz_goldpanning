@@ -22,6 +22,8 @@ PlayCrouchAnimationAndAttachPanObject = function()
     local coords    = GetEntityCoords(ped)
     local boneIndex = GetEntityBoneIndexByName(ped, "SKEL_R_HAND")
 
+    SetCurrentPedWeapon(ped, joaat("WEAPON_UNARMED"), true, 0, false, false)
+    
     LoadModel("P_CS_MININGPAN01X")
 
     CURRENT_OBJECT_ENTITY = CreateObject(joaat("P_CS_MININGPAN01X"), coords.x+0.3, coords.y,coords.z, true, false, false)
