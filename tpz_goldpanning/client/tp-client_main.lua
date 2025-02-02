@@ -69,7 +69,7 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
 
             for index, difficulty in pairs (Config.Difficulties) do
 
-                if exports["tpz_skillcheck"]:skillCheck(difficulty.mode) then
+                if exports["tpz_skillcheck"]:skillCheck(difficulty) then
     
                     if next(Config.Difficulties, index) == nil then
                         success = true
