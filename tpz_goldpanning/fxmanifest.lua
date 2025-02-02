@@ -14,6 +14,7 @@ dependencies {
     'tpz_core',
     'tpz_characters',
     'tpz_inventory',
+    'tpz_skillcheck',
 }
 
 lua54 'yes'
