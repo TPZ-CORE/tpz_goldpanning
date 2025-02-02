@@ -9,7 +9,7 @@ GetPanObjectEntity = function() -- getter
     return CURRENT_OBJECT_ENTITY
 end
 
-CrouchAnimAndAttach = function()
+PlayCrouchAnimationAndAttachPanObject = function()
 
     local dict = "script_rc@cldn@ig@rsc2_ig1_questionshopkeeper"
     RequestAnimDict(dict)
