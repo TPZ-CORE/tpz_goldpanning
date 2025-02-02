@@ -1,42 +1,62 @@
+local TPZ    = {}
 local TPZInv = exports.tpz_inventory:getInventoryAPI() -- Getting the inventory API Functions.
 
 local ListedPlayers = {}
 
 -----------------------------------------------------------
+--[[ Local Functions  ]]--
+-------------------------------------------------------------
+
+local function GetPlayerData(source)
+	local _source = source
+    local xPlayer = TPZ.GetPlayer(_source)
+
+	return {
+        steamName      = GetPlayerName(_source),
+        username       = xPlayer.getFirstName() .. ' ' .. xPlayer.getLastName(),
+		identifier     = xPlayer.getIdentifier(),
+        charIdentifier = xPlayer.getCharacterIdentifier(),
+	}
+
+end
+
+local IsWaterSource = function(currentWaterId)
+
+    for k,v in pairs(Config.WaterTypes) do
+        if currentWaterId == Config.WaterTypes[k]["waterhash"] then
+            return true
+        end
+    end
+
+    return false
+
+end
+
+-----------------------------------------------------------
 --[[ Items Registration  ]]--
 -----------------------------------------------------------
-
--- @param source     - returns the player source.
--- @param item       - returns the item name.
--- @param itemId     - returns the itemId (itemId exists only for non-stackable items) otherwise it will return as "0"
--- @param id         - returns the item id which is located in the tpz_items table.
--- @param label      - returns the item label name.
--- @param weight     - returns the item weight.
--- @param durability - returns the durability (exists only for non-stackable items).
--- @param metadata   - returns the metadata that you have created on the given item.
 
 TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
 	local _source = data.source
 
-     if ListedPlayers[_source] then
-         SendNotification(_source, Locales['GOLDPAN_IN_PROGRESS'], "error")
-         return
-     end
+    if ListedPlayers[_source] then
+        SendNotification(_source, Locales['GOLDPAN_IN_PROGRESS'], "error")
+        return
+    end
 
 	if data.durability <= 0 and Config.Durability.Enabled then
 	    SendNotification(_source, Locales['NO_DURABILITY'], "error")
 	    return
 	end
 
-     ListedPlayers[_source] = true
+    ListedPlayers[_source] = true
 		
 	TriggerClientEvent('tpz_goldpanning:client:startPanning', _source)
 	
-     if Config.Durability.Enabled then
-         TPZInv.removeItemDurability(_source, Config.GoldPanItem, Config.Durability.RemoveValue, data.itemId, false)
-     end
+    if Config.Durability.Enabled then
+        TPZInv.removeItemDurability(_source, Config.GoldPanItem, Config.Durability.RemoveValue, data.itemId, false)
+    end
 
-	--TPZInv.closeInventory(_source)  -- This is not required since we have already set it as closeInventory = true  from database `tpz_items` table.
 end)
 
 -----------------------------------------------------------
@@ -44,27 +64,38 @@ end)
 -----------------------------------------------------------
  
 AddEventHandler('onResourceStop', function(resourceName)
-  if (GetCurrentResourceName() ~= resourceName) then
-    return
-  end
-  
-  ListedPlayers = nil -- clearing all data
+    if (GetCurrentResourceName() ~= resourceName) then
+        return
+    end
+      
+    ListedPlayers = nil -- clearing all data
 end)
 
-AddEventHandler('playerDropped', function (reason, resourceName, clientDropReason)
-     ListedPlayers[source] = nil -- removing player source in case he is listed (crashed?)
+AddEventHandler('playerDropped', function (reason, resourceName, reason)
+    ListedPlayers[source] = nil -- removing player source in case he is listed (crashed?)
 end)
 
------------------------------------------------------------
+-------------------------------------------------------------
 --[[ Events  ]]--
 -------------------------------------------------------------
 
 RegisterServerEvent("tpz_goldpanning:server:onRandomReward")
-AddEventHandler("tpz_goldpanning:server:onRandomReward", function()
-    local _source = source 
+AddEventHandler("tpz_goldpanning:server:onRandomReward", function(waterHashId)
+    local _source          = source 
+    local PlayerData       = GetPlayerData()
+    
+    local foundWaterSource = IsWaterSource(waterHashId)
 
-    if ListedPlayers[_source] then
-        -- devtools
+    if ListedPlayers[_source] or not foundWaterSource then
+
+        if Config.Webhooks['DEVTOOLS_INJECTION_CHEAT'].Enabled then
+            local _w, _c      = Config.Webhooks['DEVTOOLS_INJECTION_CHEAT'].Webhook, Config.Webhooks['DEVTOOLS_INJECTION_CHEAT'].Color
+            local description = 'The specified user attempted to use devtools / injection or netbug cheat on gold panning reward.'
+            TPZ.SendToDiscordWithPlayerParameters(_w, Locales['DEVTOOLS_INJECTION_DETECTED_TITLE_LOG'], _source, PlayerData.steamName, PlayerData.username, PlayerData.identifier, PlayerData.charIdentifier, description, _c)
+        end
+
+        ListedPlayers[_source] = nil
+        xPlayer.disconnect(Locales['DEVTOOLS_INJECTION_DETECTED'])
         return
     end
 
