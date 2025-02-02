@@ -1,4 +1,6 @@
-TPZInv = exports.tpz_inventory:getInventoryAPI() -- Getting the inventory API Functions.
+local TPZInv = exports.tpz_inventory:getInventoryAPI() -- Getting the inventory API Functions.
+
+local ListedPlayers = {}
 
 -----------------------------------------------------------
 --[[ Items Registration  ]]--
@@ -16,37 +18,57 @@ TPZInv = exports.tpz_inventory:getInventoryAPI() -- Getting the inventory API Fu
 TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
 	local _source = data.source
 
-	if data.durability <= 0 then
+ if ListedPlayers[_source] then
+     SendNotification(_source, Locales['GOLDPAN_IN_PROGRESS'], "error")
+     return
+ end
+
+	if data.durability <= 0 and Config.Durability.Enabled then
 	    SendNotification(_source, Locales['NO_DURABILITY'], "error")
 	    return
 	end
+
+ ListedPlayers[_source] = true
 		
-	TriggerClientEvent('tpz_goldpanning:startPanning', _source)
-	TPZInv.removeItemDurability(_source, Config.GoldPanItem, Config.DurabilityRemove, data.itemId, false)
-		
+	TriggerClientEvent('tpz_goldpanning:client:startPanning', _source)
+	
+ if Config.Durability.Enabled then
+     TPZInv.removeItemDurability(_source, Config.GoldPanItem, Config.Durability.RemoveValue, data.itemId, false)
+ end
+
 	--TPZInv.closeInventory(_source)  -- This is not required since we have already set it as closeInventory = true  from database `tpz_items` table.
 end)
-
+ 
 -----------------------------------------------------------
 --[[ Events  ]]--
 -----------------------------------------------------------
 
-RegisterServerEvent("tpz_goldpanning:onRandomReward")
-AddEventHandler("tpz_goldpanning:onRandomReward", function()
-    local _source           = source 
+RegisterServerEvent("tpz_goldpanning:server:onRandomReward")
+AddEventHandler("tpz_goldpanning:server:onRandomReward", function()
+    local _source = source 
 
-    local randomRewardCount = math.random(Config.Reward.randomQuantity.min, Config.Reward.randomQuantity.max)
-	local canCarryItem      = TPZInv.canCarryItem(_source, Config.Reward.item, randomRewardCount)
+    if ListedPlayers[_source] then
+        -- devtools
+        return
+    end
+
+    math.randomseed(os.time()) -- required to refresh the random.math for better results. 
+
+    local randomRewardCount = math.random(Config.Reward.ReceiveValue.min, Config.Reward.ReceiveValue.max)
+    local canCarryItem       = TPZInv.canCarryItem(_source, Config.Reward.Item, randomRewardCount)
 
     Wait(500)
 
     if canCarryItem then
 
-        TPZInv.addItem(_source, rewardData.item, randomRewardCount)
+        TPZInv.addItem(_source, Config.Reward.Item, randomRewardCount)
 
         SendNotification(_source, string.format(Locales['SUCCESSFULLY_FOUND'], randomRewardCount), "success")
         
     else
         SendNotification(_source, Locales['NOT_ENOUGH_INVENTORY_WEIGHT'], "error")
     end
+
+    ListedPlayers[_source] = nil
+
 end)
