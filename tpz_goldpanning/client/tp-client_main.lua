@@ -89,7 +89,7 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
             RemoveEntityProperly(GetPanObjectEntity(), joaat("P_CS_MININGPAN01X") ) -- must remove the entity and the model hash to unload properly. 
 
             if success then
-                TriggerServerEvent("tpz_goldpanning:onRandomReward", currentWaterId)
+                TriggerServerEvent("tpz_goldpanning:server:onRandomReward", currentWaterId)
             end
 
             IS_PLAYER_BUSY = false
