@@ -104,3 +104,24 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
     end
 
 end)
+
+-----------------------------------------------------------
+--[[ Threads  ]]--
+-----------------------------------------------------------
+
+-- The specified task is required to prevent players opening the inventory while being busy.
+Citizen.CreateThread(function() 
+
+    while true do
+
+        Wait(0)
+
+        if IS_PLAYER_BUSY then
+            TriggerEvent('tpz_inventory:closePlayerInventory')
+        else
+            Wait(1000)
+        end
+
+    end
+
+end)
