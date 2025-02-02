@@ -71,7 +71,7 @@ AddEventHandler("tpz_goldpanning:server:onRandomReward", function()
     math.randomseed(os.time()) -- required to refresh the random.math for better results. 
 
     local randomRewardCount = math.random(Config.Reward.ReceiveValue.min, Config.Reward.ReceiveValue.max)
-    local canCarryItem       = TPZInv.canCarryItem(_source, Config.Reward.Item, randomRewardCount)
+    local canCarryItem      = TPZInv.canCarryItem(_source, Config.Reward.Item, randomRewardCount)
 
     Wait(500)
 
@@ -85,6 +85,10 @@ AddEventHandler("tpz_goldpanning:server:onRandomReward", function()
         SendNotification(_source, Locales['NOT_ENOUGH_INVENTORY_WEIGHT'], "error")
     end
 
+    -- there is no chance winning the skillcheck within 5 seconds, 
+    -- there are also animations at start, within those seconds, the player should
+    -- do animations, its 100% devtools. 
+    Wait(5000)  
     ListedPlayers[_source] = nil
 
 end)
