@@ -1,4 +1,7 @@
-local TPZ    = {}
+local TPZ = {}
+
+TriggerEvent("getTPZCore", function(cb) TPZ = cb end)
+
 local TPZInv = exports.tpz_inventory:getInventoryAPI() -- Getting the inventory API Functions.
 
 local ListedPlayers = {}
