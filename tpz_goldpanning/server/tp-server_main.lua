@@ -39,18 +39,13 @@ end
 TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
 	local _source = data.source
 
-    if ListedPlayers[_source] then
-        SendNotification(_source, Locales['GOLDPAN_IN_PROGRESS'], "error")
-        return
-    end
+    ListedPlayers[_source] = nil
 
 	if data.durability <= 0 and Config.Durability.Enabled then
 	    SendNotification(_source, Locales['NO_DURABILITY'], "error")
 	    return
 	end
 
-    ListedPlayers[_source] = true
-		
 	TriggerClientEvent('tpz_goldpanning:client:startPanning', _source)
 	
     if Config.Durability.Enabled then
@@ -58,7 +53,6 @@ TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
     end
 
 end)
-
 -----------------------------------------------------------
 --[[ Base Events  ]]--
 -----------------------------------------------------------
@@ -98,6 +92,8 @@ AddEventHandler("tpz_goldpanning:server:onRandomReward", function(waterHashId)
         xPlayer.disconnect(Locales['DEVTOOLS_INJECTION_DETECTED'])
         return
     end
+
+    ListedPlayers[_source] = true
 
     math.randomseed(os.time()) -- required to refresh the random.math for better results. 
 
