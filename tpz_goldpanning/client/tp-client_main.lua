@@ -17,6 +17,27 @@ local IsWaterSource = function(currentWaterId)
 end
 
 -----------------------------------------------------------
+--[[ Base Events  ]]--
+-----------------------------------------------------------
+
+AddEventHandler('onResourceStop', function(resourceName)
+    if (GetCurrentResourceName() ~= resourceName) then
+        return
+    end
+
+    if IS_PLAYER_BUSY then
+
+        ClearPedTasks(PlayerPedId())
+
+        RemoveAnimDict("script_rc@cldn@ig@rsc2_ig1_questionshopkeeper") -- must remove the dict of animation
+        RemoveAnimDict("script_re@gold_panner@gold_success") -- must remove the dict of animation
+        RemoveEntityProperly(GetPanObjectEntity(), joaat("P_CS_MININGPAN01X") ) -- must remove the entity and the model hash to unload properly. 
+
+    end
+
+end)
+
+-----------------------------------------------------------
 --[[ Events  ]]--
 -----------------------------------------------------------
 
