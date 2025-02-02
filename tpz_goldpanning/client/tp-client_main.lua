@@ -20,18 +20,18 @@ end
 --[[ Events  ]]--
 -----------------------------------------------------------
 
-RegisterNetEvent('tpz_goldpanning:startPanning')
-AddEventHandler('tpz_goldpanning:startPanning', function()
+RegisterNetEvent('tpz_goldpanning:client:startPanning')
+AddEventHandler('tpz_goldpanning:client:startPanning', function()
 
     if not IS_PLAYER_BUSY then 
 
-        local ped    = PlayerPedId()
-        local coords = GetEntityCoords(ped)
+        local ped              = PlayerPedId()
+        local coords           = GetEntityCoords(ped)
 
-        local currentWaterId = Citizen.InvokeNative(0x5BA7A68A346A5A91,coords.x, coords.y, coords.z)
+        local currentWaterId   = Citizen.InvokeNative(0x5BA7A68A346A5A91,coords.x, coords.y, coords.z)
 
-        local foundWaterSource              = IsWaterSource(currentWaterId)
-        local hasSuccessfullyPassedMinigame = false
+        local foundWaterSource = IsWaterSource(currentWaterId)
+        local success          = false
 
         if foundWaterSource then
 
@@ -48,7 +48,7 @@ AddEventHandler('tpz_goldpanning:startPanning', function()
                 if exports["tp_skillcheck"]:skillCheck(difficulty.mode) then
     
                     if next(Config.Difficulties, index) == nil then
-                        hasSuccessfullyPassedMinigame = true
+                        success = true
                      end
                  else
                      SendNotification(nil, Locales['NOT_FOUND'], "error")
@@ -60,9 +60,9 @@ AddEventHandler('tpz_goldpanning:startPanning', function()
 
              ClearPedTasks(ped)
 
-             RemoveEntityProperly()
+             RemoveEntityProperly(GetPanObjectEntity(), joaat("P_CS_MININGPAN01X") )
 
-             if hasSuccessfullyPassedMinigame then
+             if success then
                  TriggerServerEvent("tpz_goldpanning:onRandomReward")
              end
 
