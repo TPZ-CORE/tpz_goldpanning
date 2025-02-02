@@ -51,27 +51,29 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
     
                     if next(Config.Difficulties, index) == nil then
                         success = true
-                     end
-                 else
-                     SendNotification(nil, Locales['NOT_FOUND'], "error")
-                     break
-                 end
-             end
+                    end
+                else
+                    SendNotification(nil, Locales['NOT_FOUND'], "error")
+                    break
+                end
 
-             Wait(1000)
+            end
 
-             ClearPedTasks(ped) -- clearing all tasks
+            Wait(1000)
 
-             RemoveAnimDict("script_re@gold_panner@gold_success") -- must remove the dict of animation
-             RemoveEntityProperly(GetPanObjectEntity(), joaat("P_CS_MININGPAN01X") ) -- must remove the entity and the model hash to unload properly. 
+            ClearPedTasks(ped) -- clearing all tasks
 
-             if success then
-                 TriggerServerEvent("tpz_goldpanning:onRandomReward")
-             end
+            RemoveAnimDict("script_re@gold_panner@gold_success") -- must remove the dict of animation
+            RemoveEntityProperly(GetPanObjectEntity(), joaat("P_CS_MININGPAN01X") ) -- must remove the entity and the model hash to unload properly. 
+
+            if success then
+                TriggerServerEvent("tpz_goldpanning:onRandomReward", currentWaterId)
+            end
 
         end
+
     else
-        -- notify 
+        SendNotification(nil, Locales['ALREADY_IN_PROGRESS'], "error")
     end
 
     IS_PLAYER_BUSY = false
