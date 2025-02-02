@@ -5,7 +5,7 @@ local CURRENT_OBJECT_ENTITY = nil
 --[[ Functions  ]]--
 -----------------------------------------------------------
 
-function CrouchAnimAndAttach()
+CrouchAnimAndAttach = function()
 
     local dict = "script_rc@cldn@ig@rsc2_ig1_questionshopkeeper"
     RequestAnimDict(dict)
@@ -32,7 +32,7 @@ function CrouchAnimAndAttach()
     TaskPlayAnim(ped, dict, "inspectfloor_player", 1.0, 8.0, -1, 1, 0, false, false, false)
 end
 
-function GoldShake()
+PlayGoldpanShakeAnimation = function()
     local dict = "script_re@gold_panner@gold_success"
     RequestAnimDict(dict)
     
