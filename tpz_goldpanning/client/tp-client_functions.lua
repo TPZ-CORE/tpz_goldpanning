@@ -1,9 +1,13 @@
 
-local CURRENT_OBJECT_ENTITY = nil
+local CURRENT_OBJECT_ENTITY = nil -- we use it as local and we get it through a getter.
 
 -----------------------------------------------------------
 --[[ Functions  ]]--
 -----------------------------------------------------------
+
+GetPanObjectEntity = function() -- getter 
+    return CURRENT_OBJECT_ENTITY
+end
 
 CrouchAnimAndAttach = function()
 
