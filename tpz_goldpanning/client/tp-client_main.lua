@@ -36,10 +36,12 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
         if foundWaterSource then
 
             IS_PLAYER_BUSY = true
-            CrouchAnimAndAttach()
+            PlayCrouchAnimationAndAttachPanObject()
 
             Wait(6000)
+
             ClearPedTasks(ped)
+            RemoveAnimDict("script_rc@cldn@ig@rsc2_ig1_questionshopkeeper") -- must remove the dict of animation
 
             PlayGoldpanShakeAnimation()
 
@@ -58,9 +60,10 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
 
              Wait(1000)
 
-             ClearPedTasks(ped)
+             ClearPedTasks(ped) -- clearing all tasks
 
-             RemoveEntityProperly(GetPanObjectEntity(), joaat("P_CS_MININGPAN01X") )
+             RemoveAnimDict("script_re@gold_panner@gold_success") -- must remove the dict of animation
+             RemoveEntityProperly(GetPanObjectEntity(), joaat("P_CS_MININGPAN01X") ) -- must remove the entity and the model hash to unload properly. 
 
              if success then
                  TriggerServerEvent("tpz_goldpanning:onRandomReward")
