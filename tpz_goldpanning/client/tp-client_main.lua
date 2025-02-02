@@ -1,4 +1,3 @@
-local GET_ITEM_OBJECT_ENTITY = nil
 local IS_PLAYER_BUSY = false
 
 -----------------------------------------------------------
@@ -26,8 +25,6 @@ AddEventHandler('tpz_goldpanning:startPanning', function()
 
     if not IS_PLAYER_BUSY then 
 
-        isPlayerPanning = true
-
         local ped    = PlayerPedId()
         local coords = GetEntityCoords(ped)
 
@@ -44,7 +41,7 @@ AddEventHandler('tpz_goldpanning:startPanning', function()
             Wait(6000)
             ClearPedTasks(ped)
 
-            GoldShake()
+            PlayGoldpanShakeAnimation()
 
             for index, difficulty in pairs (Config.Difficulties) do
 
@@ -63,12 +60,12 @@ AddEventHandler('tpz_goldpanning:startPanning', function()
 
              ClearPedTasks(ped)
 
-             DeleteObject(goldPanObject)
-             DeleteEntity(goldPanObject)
+             RemoveEntityProperly()
 
              if hasSuccessfullyPassedMinigame then
                  TriggerServerEvent("tpz_goldpanning:onRandomReward")
              end
+
         end
     else
         -- notify 
