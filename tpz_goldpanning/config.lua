@@ -1,14 +1,15 @@
 Config = {}
 
-Config.GoldPanItem  = "goldpan"
- 
-Config.Reward       = { 
-    item = "goldfragment", 
-    randomQuantity = { min = 1, max = 1 },
-}
+-- The required item to be used for the goldpan actions. 
+Config.GoldPanItem = "goldpan"
 
-Config.DurabilityRemove = 3 -- / 100
+-- What is the reward item and the random quantity to receive on success?
+Config.Reward = { Item = "goldfragment", ReceiveValue = { min = 1, max = 1 } }
 
+-- You want to remove durability on every use?
+Config.DurabilityRemove = { Enabled = true, RemoveValue = 3 } -- / 100
+
+-- Difficulty Stages when performing the skillcheck. 
 Config.Difficulties = {
     { mode = "easy" },
     { mode = "normal" },
