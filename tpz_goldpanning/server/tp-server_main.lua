@@ -50,7 +50,7 @@ TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
 	
     if Config.Durability.Enabled then
         math.randomseed(os.time()) -- required to refresh the random.math for better results. 
-	local randomValueRemove = math.random(Config.Durability.RemoveValue.min, Config.Durability.RemoveValue.max)
+        local randomValueRemove = math.random(Config.Durability.RemoveValue.min, Config.Durability.RemoveValue.max)
 			
         TPZInv.removeItemDurability(_source, Config.GoldPanItem, randomValueRemove, data.itemId, false)
     end
@@ -80,7 +80,8 @@ RegisterServerEvent("tpz_goldpanning:server:onRandomReward")
 AddEventHandler("tpz_goldpanning:server:onRandomReward", function(waterHashId)
     local _source          = source 
     local PlayerData       = GetPlayerData(_source)
-    
+    local xPlayer          = TPZ.GetPlayer(_source)
+
     local foundWaterSource = IsWaterSource(waterHashId)
 
     if ListedPlayers[_source] or not foundWaterSource then
@@ -101,13 +102,13 @@ AddEventHandler("tpz_goldpanning:server:onRandomReward", function(waterHashId)
     math.randomseed(os.time()) -- required to refresh the random.math for better results. 
 
     local randomRewardCount = math.random(Config.Reward.ReceiveValue.min, Config.Reward.ReceiveValue.max)
-    local canCarryItem      = TPZInv.canCarryItem(_source, Config.Reward.Item, randomRewardCount)
+    local canCarryItem      = xPlayer.canCarryItem(Config.Reward.Item, randomRewardCount)
 
     Wait(500)
 
     if canCarryItem then
 
-        TPZInv.addItem(_source, Config.Reward.Item, randomRewardCount)
+        xPlayer.addItem(Config.Reward.Item, randomRewardCount)
 
         SendNotification(_source, string.format(Locales['SUCCESSFULLY_FOUND'], randomRewardCount), "success")
         
