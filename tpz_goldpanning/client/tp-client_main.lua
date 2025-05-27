@@ -118,7 +118,7 @@ Citizen.CreateThread(function()
         if IS_PLAYER_BUSY then
             TriggerEvent('tpz_inventory:closePlayerInventory')
         else
-            Wait(1000)
+            Wait(1500)
         end
 
     end
