@@ -49,7 +49,7 @@ TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
 	TriggerClientEvent('tpz_goldpanning:client:startPanning', _source)
 	
     if Config.Durability.Enabled then
-        math.randomseed(os.time()) -- required to refresh the random.math for better results. 
+    
         local randomValueRemove = math.random(Config.Durability.RemoveValue.min, Config.Durability.RemoveValue.max)
 			
         TPZInv.removeItemDurability(_source, Config.GoldPanItem, randomValueRemove, data.itemId, false)
@@ -99,8 +99,6 @@ AddEventHandler("tpz_goldpanning:server:onRandomReward", function(waterHashId)
     end
 
     ListedPlayers[_source] = true
-
-    math.randomseed(os.time()) -- required to refresh the random.math for better results. 
 
     local randomRewardCount = math.random(Config.Reward.ReceiveValue.min, Config.Reward.ReceiveValue.max)
     local canCarryItem      = xPlayer.canCarryItem(Config.Reward.Item, randomRewardCount)
