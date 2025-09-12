@@ -55,9 +55,11 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
         local foundWaterSource = IsWaterSource(currentWaterId)
         local success          = false
 
-        if foundWaterSource then
+        if foundWaterSource and IsPedOnFoot(ped) and IsEntityInWater(ped) and not IsPedSwimming(ped) and not IsPedSwimmingUnderWater(ped) then
 
             IS_PLAYER_BUSY = true
+            TriggerEvent('tpz_goldpanning:client:startPanningTask') -- required to start the task only for those who do panning.
+
             PlayCrouchAnimationAndAttachPanObject()
 
             Wait(6000)
@@ -109,18 +111,9 @@ end)
 -----------------------------------------------------------
 
 -- The specified task is required to prevent players opening the inventory while being busy.
-Citizen.CreateThread(function() 
-
-    while true do
-
-        Wait(0)
-
-        if IS_PLAYER_BUSY then
-            TriggerEvent('tpz_inventory:closePlayerInventory')
-        else
-            Wait(1500)
-        end
-
+AddEventHandler('tpz_goldpanning:client:startPanningTask', function()
+    while IS_PLAYER_BUSY do
+        Wait(500)
+        TriggerEvent('tpz_inventory:closePlayerInventory')
     end
-
 end)
