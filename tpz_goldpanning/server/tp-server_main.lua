@@ -74,9 +74,23 @@ end)
 --[[ Events  ]]--
 -------------------------------------------------------------
 
-RegisterServerEvent("tpz_goldpanning:server:clear_state")-- version '1.0.1' 
+RegisterServerEvent("tpz_goldpanning:server:clear_state") -- version '1.0.1' 
 AddEventHandler("tpz_goldpanning:server:clear_state", function()
     ListedPlayers[source] = nil
+end)
+
+
+RegisterServerEvent("tpz_goldpanning:server:onPanningFail")
+AddEventHandler("tpz_goldpanning:server:onPanningFail", function() -- version '1.0.1' 
+    ListedPlayers[source] = nil
+
+    -- version '1.0.1' added durability remove.
+    if Config.Durability.Enabled then
+    
+        local randomValueRemove = math.random(Config.Durability.RemoveValue.min, Config.Durability.RemoveValue.max)
+        TPZInv.removeItemDurability(_source, Config.GoldPanItem, randomValueRemove, ListedPlayers[_source].itemId, false)
+    end
+
 end)
 
 RegisterServerEvent("tpz_goldpanning:server:onRandomReward")
