@@ -97,10 +97,12 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
             IS_PLAYER_BUSY = false
             
         else
+            TriggerServerEvent("tpz_goldpanning:server:clear_state")-- version '1.0.1' 
             SendNotification(nil, Locales['NOT_ALLOWED_AREA'], "error")
         end
 
     else
+        TriggerServerEvent("tpz_goldpanning:server:clear_state")-- version '1.0.1' 
         SendNotification(nil, Locales['ALREADY_IN_PROGRESS'], "error")
     end
 
