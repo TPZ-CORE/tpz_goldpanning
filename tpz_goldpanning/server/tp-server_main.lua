@@ -82,14 +82,19 @@ end)
 
 RegisterServerEvent("tpz_goldpanning:server:onPanningFail")
 AddEventHandler("tpz_goldpanning:server:onPanningFail", function() -- version '1.0.1' 
-    ListedPlayers[source] = nil
+    local _source = source 
+
+    -- We make sure in case the item somehow is no longer on player inventory.
+    local quantity = TPZInv.getItemQuantity(_source, Config.GoldPanItem)
 
     -- version '1.0.1' added durability remove.
-    if Config.Durability.Enabled then
+    if Config.Durability.Enabled and quantity > 0 then
     
         local randomValueRemove = math.random(Config.Durability.RemoveValue.min, Config.Durability.RemoveValue.max)
         TPZInv.removeItemDurability(_source, Config.GoldPanItem, randomValueRemove, ListedPlayers[_source].itemId, false)
     end
+
+    ListedPlayers[_source] = nil
 
 end)
 
