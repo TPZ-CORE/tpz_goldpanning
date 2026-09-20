@@ -92,6 +92,8 @@ AddEventHandler('tpz_goldpanning:client:startPanning', function()
 
             if success then
                 TriggerServerEvent("tpz_goldpanning:server:onRandomReward", currentWaterId)
+            else
+                TriggerServerEvent("tpz_goldpanning:server:onPanningFail")-- version '1.0.1' 
             end
 
             IS_PLAYER_BUSY = false
