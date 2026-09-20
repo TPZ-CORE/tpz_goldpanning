@@ -39,7 +39,12 @@ end
 TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
 	local _source = data.source
 
-    ListedPlayers[_source] = nil
+    if ListedPlayers[_source] then 
+	    SendNotification(_source, Locales['ALREADY_IN_PROGRESS'], "error") -- version '1.0.1'
+        return 
+    end
+
+    ListedPlayers[_source] = { source = _source, itemId = data.itemId } -- version '1.0.1'
 
 	if data.durability <= 0 and Config.Durability.Enabled then
 	    SendNotification(_source, Locales['NO_DURABILITY'], "error")
@@ -47,13 +52,6 @@ TPZInv.registerUsableItem(Config.GoldPanItem, "tpz_goldpanning", function(data)
 	end
 
 	TriggerClientEvent('tpz_goldpanning:client:startPanning', _source)
-	
-    if Config.Durability.Enabled then
-    
-        local randomValueRemove = math.random(Config.Durability.RemoveValue.min, Config.Durability.RemoveValue.max)
-			
-        TPZInv.removeItemDurability(_source, Config.GoldPanItem, randomValueRemove, data.itemId, false)
-    end
 
 end)
 -----------------------------------------------------------
@@ -76,6 +74,11 @@ end)
 --[[ Events  ]]--
 -------------------------------------------------------------
 
+RegisterServerEvent("tpz_goldpanning:server:clear_state")-- version '1.0.1' 
+AddEventHandler("tpz_goldpanning:server:clear_state", function()
+    ListedPlayers[source] = nil
+end)
+
 RegisterServerEvent("tpz_goldpanning:server:onRandomReward")
 AddEventHandler("tpz_goldpanning:server:onRandomReward", function(waterHashId)
     local _source          = source 
@@ -84,24 +87,28 @@ AddEventHandler("tpz_goldpanning:server:onRandomReward", function(waterHashId)
 
     local foundWaterSource = IsWaterSource(waterHashId)
 
-    if ListedPlayers[_source] or not foundWaterSource then
+    -- version '1.0.1' ListedPlayers[_source] == nil FROM ListedPlayers[_source]
+    if ListedPlayers[_source] == nil or not foundWaterSource then
 
         if Config.Webhooks['DEVTOOLS_INJECTION_CHEAT'].Enabled then
             local _w, _c      = TPZ.GetWebhookUrl('tpz_goldpanning', 'DEVTOOLS_INJECTION_CHEAT'), Config.Webhooks['DEVTOOLS_INJECTION_CHEAT'].Color
             local description = 'The specified user attempted to use devtools / injection or netbug cheat on gold panning reward.'
 
-            if string.find(_w, "GetWebhookUrl") then local input = str:match("%((.-)%)") _w = TPZ.GetWebhookUrl(input) end
-
             TPZ.SendToDiscordWithPlayerParameters(_w, Locales['DEVTOOLS_INJECTION_DETECTED_TITLE_LOG'], _source, PlayerData.steamName, PlayerData.username, PlayerData.identifier, PlayerData.charIdentifier, description, _c)
         end
 
-        ListedPlayers[_source] = nil
         --xPlayer.disconnect(Locales['DEVTOOLS_INJECTION_DETECTED'])
         xPlayer.ban(Locales['DEVTOOLS_INJECTION_DETECTED'], -1)
         return
     end
 
-    ListedPlayers[_source] = true
+    -- version '1.0.1' added durability remove.
+    if Config.Durability.Enabled then
+    
+        local randomValueRemove = math.random(Config.Durability.RemoveValue.min, Config.Durability.RemoveValue.max)
+			
+        TPZInv.removeItemDurability(_source, Config.GoldPanItem, randomValueRemove, ListedPlayers[_source].itemId, false)
+    end
 
     local randomRewardCount = math.random(Config.Reward.ReceiveValue.min, Config.Reward.ReceiveValue.max)
     local canCarryItem      = xPlayer.canCarryItem(Config.Reward.Item, randomRewardCount)
